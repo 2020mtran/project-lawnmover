@@ -112,8 +112,15 @@ public:
   // Return true when this disk_state is fully sorted, with all light disks on
   // the left (low indices) and all dark disks on the right (high indices).
   bool is_sorted() const {
-      
-      return true;
+      for (size_t i = 0; i < total_count(); i++) { // Loop through every value in the list
+        if (_colors[i] <= total_count()/2 && _colors[i] != DISK_LIGHT) {  // If the value is in the first half, AND is not white, return false
+          return false;
+        }
+        else if (_colors[i] > total_count()/2 && _colors[i] != DISK_DARK) { // If the value is in the second half, AND is not black, return false
+          return false;
+        }
+      } 
+      return true; // else return true, meaning that the list is sorted!
   }
 };
 
@@ -145,9 +152,37 @@ public:
 // Algorithm that sorts disks using the alternate algorithm.
 sorted_disks sort_alternate(const disk_state& before) {
 	int numOfSwap = 0;                                                                      //record # of step swap
- 
+  while (is_sorted() != true) { // While vector is not sorted
+    if (numOfSwap == 0) { // Check if number of swaps is 0 (shows whether we have gone through the swap at least once yet)
+      for (size_t i = 0; i < total_count(); i++) { // Loop through list one time
+        if (_color[i] != _color.back()) { // If current color is not the end
+          if (_color[i] == true && _color[i+1] == false && _color[i] != _color.front()) { // Check if current color is black + next color is white + not the front color
+          __color[i].swap(_color[i+1]); // Swap current color with next color
+          numOfSwap += 1; // Increase number of swap count by 1
           }
-
+        }
+      }
+    } else {
+      if (numOfSwap % 2 == 1) { // If number of swap is odd (based on pattern)
+        for (size_t j = total_count(); j > 0; j--) {
+          if (_color[i] != _color.back()) { // If current color is not the end
+            if (_color[i] == true && _color[i-1] == false && _color[i] != _color.back()) { // Check if current color is black + next color is white + not the front color
+              __color[i].swap(_color[i-1]); // Swap current color with next color
+              numOfSwap += 1; // Increase number of swap count by 1
+            }
+          }
+        } else {
+          for (size_t i = 0; i < total_count(); i++) { // Loop through list one time
+            if (_color[i] != _color.back()) { // If current color is not the end
+              if (_color[i] == true && _color[i+1] == false && _color[i] != _color.front()) { // Check if current color is black + next color is white + not the front color
+                __color[i].swap(_color[i+1]); // Swap current color with next color
+                numOfSwap++; // Increase number of swap count by 1
+              }
+            }
+          }
+        }
+   }
+  
   return sorted_disks(disk_state(state), numOfSwap);
 }
 
