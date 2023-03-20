@@ -1,0 +1,5 @@
+#ignore rubric file
+rubrictest.hpp
+# Executables
+*.exe
+*.out
